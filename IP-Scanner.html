@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Gholam IP Scanner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0a0f1c, #0b0d15);
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(20, 22, 40, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .logo-text {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .gholam-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00f2fe, #4facfe, #f5b042, #ff416c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+            animation: glowPulse 2s ease-in-out infinite alternate;
+        }
+        .taksir-sub {
+            font-size: 1rem;
+            color: #8e9aaf;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 10px rgba(0, 242, 254, 0.3); }
+            100% { text-shadow: 0 0 30px rgba(0, 242, 254, 0.7); }
+        }
+        .border-neon {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f2fe, #f5b042, transparent);
+            margin: 12px auto 0;
+        }
+        
+        .sub {
+            color: #8e9aaf;
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+        }
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            background: #03060f;
+            border: 1px solid #2a3450;
+            border-radius: 18px;
+            color: white;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #00f2fe;
+        }
+        .flex-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        button {
+            background: linear-gradient(95deg, #00c6fb, #005bea);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        .btn-stop {
+            background: linear-gradient(95deg, #ff416c, #ff4b2b);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2a3450;
+        }
+        .btn-purple {
+            background: linear-gradient(95deg, #8b5cf6, #7c3aed);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            background: #03060f;
+            padding: 12px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #8e9aaf;
+            margin-top: 5px;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00f2fe;
+        }
+        .progress-bar {
+            background: #0a0f1c;
+            border-radius: 40px;
+            height: 28px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            width: 0%;
+            height: 100%;
+            transition: width 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .result-box {
+            background: #01050c;
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 15px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .ip-item {
+            background: #0e121f;
+            padding: 10px 14px;
+            margin: 6px 0;
+            border-radius: 40px;
+            font-family: monospace;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #2ecc71;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .ip-text {
+            color: #2ecc71;
+            font-weight: bold;
+            direction: ltr;
+            text-align: left;
+            font-size: 13px;
+        }
+        .sni-text {
+            color: #f5b042;
+            font-size: 10px;
+            background: #1a1f2e;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .ip-ping {
+            color: #8e9aaf;
+            font-size: 10px;
+        }
+        .badge {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #5c6e8c;
+            line-height: 1.8;
+        }
+        button:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+        @media (max-width: 550px) {
+            .gholam-name { font-size: 1.8rem; }
+            .stat-number { font-size: 1.3rem; }
+            button { padding: 10px; font-size: 12px; }
+            .ip-text { font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card" style="text-align: center;">
+        <div class="logo-text">
+            <div class="gholam-name">GHOLAM</div>
+            <div class="taksir-sub">✦ IP SCANNER ✦</div>
+            <div class="border-neon"></div>
+        </div>
+        <div class="sub">خروجی فقط IP | نمایش لحظه‌ای | تایم‌اوت 4500ms</div>
+    </div>
+
+    <div class="card">
+        <textarea id="ipInput" rows="4" placeholder="لیست IPها را وارد کنید..."></textarea>
+        
+        <div class="flex-row">
+            <button id="loadFileBtn" class="btn-outline">📂 بارگذاری فایل</button>
+            <button id="prepareBtn" class="btn-purple">⚡ آماده‌سازی لیست</button>
+            <button id="clearBtn" class="btn-outline">🗑 پاک کردن</button>
+        </div>
+
+        <div class="flex-row" style="margin-top: 12px;">
+            <select id="presetSelect">
+                <option value="">🔽 رنج‌های آماده سایفون (انتخاب کنید → خودکار اعمال می‌شود)</option>
+                <option value="preset_irancell">📱 ایرانسل (185.200.232.0/24 + 185.200.233.0/24)</option>
+                <option value="preset_hamrah">📱 همراه اول (194.225.0.0/16 + 217.219.0.0/16)</option>
+                <option value="preset_saman">📱 سامانتل (185.143.232.0/24 + 185.143.233.0/24 + 5.134.192.0/20)</option>
+                <option value="preset_rightel">📱 رایتل (89.35.64.0/19 + 89.41.192.0/19 + 185.112.32.0/22)</option>
+                <option value="preset_cdn">☁️ CDN بین‌المللی (Cloudflare, Google)</option>
+                <option value="preset_all">🌍 ترکیبی (همه اپراتورها + CDN)</option>
+            </select>
+        </div>
+
+        <div class="flex-row">
+            <div style="flex:1"><label style="font-size:11px; color:#8e9aaf;">⏱ تایم‌اوت (ms)</label>
+            <input type="number" id="timeoutInput" value="4500"></div>
+            <div style="flex:1"><label style="font-size:11px; color:#8e9aaf;">⚡ همزمانی</label>
+            <input type="number" id="concurrencyInput" value="10"></div>
+        </div>
+
+        <div class="flex-row">
+            <button id="startBtn">▶ شروع اسکن</button>
+            <button id="stopBtn" class="btn-stop" disabled>⏹ توقف</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="stats">
+            <div class="stat"><div class="stat-number" id="statTotal">0</div><div class="stat-label">کل IP</div></div>
+            <div class="stat"><div class="stat-number" id="statSuccess">0</div><div class="stat-label">سالم</div></div>
+            <div class="stat"><div class="stat-number" id="statFail">0</div><div class="stat-label">ناموفق</div></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill">0%</div></div>
+    </div>
+
+    <div class="card">
+        <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+            <button id="copyBtn" disabled>📋 کپی فقط IP ها</button>
+            <button id="downloadBtn" disabled>💾 ذخیره فقط IP ها</button>
+        </div>
+        <div class="result-box" id="resultBox">
+            <div style="text-align:center; color:#5c6e8c; padding: 30px;">منتظر شروع اسکن...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        🔔 بعد از اتمام اسکن، نوتیفیکیشن دریافت می‌کنید<br>
+        ⚡ نمایش لحظه‌ای IPهای پیدا شده | فایل خروجی: GT_CIPs_تاریخ.txt<br>
+        <strong style="color:#00f2fe;">طراحی و توسعه توسط Gholam Taksir</strong>
+    </div>
+</div>
+
+<script>
+    const ipInput = document.getElementById('ipInput');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.txt';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    
+    const loadFileBtn = document.getElementById('loadFileBtn');
+    const prepareBtn = document.getElementById('prepareBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const presetSelect = document.getElementById('presetSelect');
+    const timeoutInput = document.getElementById('timeoutInput');
+    const concurrencyInput = document.getElementById('concurrencyInput');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resultBox = document.getElementById('resultBox');
+    const statTotal = document.getElementById('statTotal');
+    const statSuccess = document.getElementById('statSuccess');
+    const statFail = document.getElementById('statFail');
+    const progressFill = document.getElementById('progressFill');
+
+    let scanning = false;
+    let stopRequested = false;
+    let currentIps = [];
+    let ipQueue = [];
+    let results = [];
+    let scannedCount = 0;
+    let successCount = 0;
+    let failCount = 0;
+    let activeWorkers = 0;
+
+    const SNI_LIST = ['cloudflare.com', 'google.com', 'aparat.com'];
+
+    function ipToInt(ip) {
+        return ip.split('.').reduce((int, oct) => (int << 8) + parseInt(oct), 0) >>> 0;
+    }
+    function intToIp(int) {
+        return [(int >>> 24) & 0xff, (int >>> 16) & 0xff, (int >>> 8) & 0xff, int & 0xff].join('.');
+    }
+    function expandRange(startIP, endIP) {
+        let start = ipToInt(startIP);
+        let end = ipToInt(endIP);
+        let res = [];
+        for (let i = start; i <= end && res.length < 500; i++) res.push(intToIp(i));
+        return res;
+    }
+    function cidrToIps(cidr) {
+        let [base, mask] = cidr.split('/');
+        mask = parseInt(mask);
+        if (isNaN(mask) || mask < 8 || mask > 32) return [];
+        let ipInt = ipToInt(base);
+        let networkMask = (0xFFFFFFFF << (32 - mask)) >>> 0;
+        let network = ipInt & networkMask;
+        let total = Math.pow(2, 32 - mask);
+        if (total > 2000) {
+            let ips = [];
+            let step = Math.floor(total / 200);
+            for (let i = 1; i < total - 1 && ips.length < 200; i += step) {
+                ips.push(intToIp(network + i));
+            }
+            return ips;
+        }
+        let ips = [];
+        for (let i = 1; i < total - 1 && ips.length < 500; i++) {
+            ips.push(intToIp(network + i));
+        }
+        return ips;
+    }
+
+    function prepareIpList() {
+        let text = ipInput.value;
+        let lines = text.split(/\r?\n/);
+        let ips = [];
+        for (let line of lines) {
+            line = line.trim();
+            let ipMatch = line.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
+            if (ipMatch) {
+                ips.push(ipMatch[0]);
+            }
+        }
+        let unique = [...new Set(ips)];
+        unique.sort((a,b) => a.localeCompare(b, undefined, {numeric: true}));
+        ipInput.value = unique.join('\n');
+        if (unique.length) {
+            alert(`${unique.length} آی‌پی آماده شد.`);
+        } else {
+            alert("آی‌پی معتبری یافت نشد.");
+        }
+        return unique;
+    }
+
+    function parseRangesFromText(text) {
+        let lines = text.split(/\r?\n/);
+        let raw = [];
+        for (let line of lines) {
+            line = line.trim();
+            if (!line || line.startsWith("#")) continue;
+            if (line.includes('-') && !line.includes('/')) {
+                let [s, e] = line.split('-');
+                if (s && e) raw.push(...expandRange(s.trim(), e.trim()));
+            } else if (line.includes('/')) {
+                raw.push(...cidrToIps(line));
+            } else if (/^(\d{1,3}\.){3}\d{1,3}$/.test(line)) {
+                raw.push(line);
+            }
+        }
+        return [...new Set(raw)];
+    }
+
+    function testIp(ip) {
+        return new Promise((resolve) => {
+            const start = performance.now();
+            const timeout = parseInt(timeoutInput.value) || 4500;
+            let ws = null;
+            let tid = setTimeout(() => {
+                if (ws) try { ws.close(); } catch(e) {}
+                resolve({ success: false, ping: null });
+            }, timeout);
+            try {
+                ws = new WebSocket(`wss://${ip}:443`);
+                ws.onopen = () => finish(true);
+                ws.onerror = () => finish(true);
+                ws.onclose = () => finish(true);
+            } catch(e) {
+                finish(false);
+            }
+            function finish(success) {
+                clearTimeout(tid);
+                let ping = Math.round(performance.now() - start);
+                if (ws) try { ws.close(); } catch(e) {}
+                resolve({ success: success, ping: success ? ping : null });
+            }
+        });
+    }
+
+    async function findBestSni(ip) {
+        let bestSni = null;
+        let bestPing = Infinity;
+        
+        for (let sni of SNI_LIST) {
+            let result = await testIp(ip);
+            if (result.success && result.ping < bestPing) {
+                bestPing = result.ping;
+                bestSni = sni;
+            }
+        }
+        
+        if (bestSni) {
+            return { sni: bestSni, ping: bestPing };
+        }
+        return null;
+    }
+
+    // تابع اضافه کردن لحظه‌ای IP به جدول
+    function addIpToTable(ip, sni, ping) {
+        results.push({ ip: ip, sni: sni, ping: ping });
+        refreshTableDisplay();
+    }
+
+    function refreshTableDisplay() {
+        let sorted = [...results].sort((a,b) => a.ping - b.ping);
+        if (sorted.length === 0) {
+            if (!scanning) {
+                resultBox.innerHTML = '<div style="text-align:center; color:#5c6e8c; padding: 30px;">⏳ هنوز IP سالمی پیدا نشده</div>';
+            } else {
+                resultBox.innerHTML = '<div style="text-align:center; color:#5c6e8c; padding: 30px;">🔍 در حال اسکن...</div>';
+            }
+            return;
+        }
+        
+        let html = '';
+        for (let r of sorted) {
+            html += `<div class="ip-item">
+                        <span class="ip-text">${r.ip}</span>
+                        <span class="sni-text">🎯 SNI: ${r.sni}</span>
+                        <span class="ip-ping">${r.ping} ms</span>
+                        <span class="badge">✓ سالم</span>
+                     </div>`;
+        }
+        resultBox.innerHTML = html;
+    }
+
+    async function worker() {
+        while (scanning && !stopRequested && ipQueue.length > 0) {
+            let ip = ipQueue.shift();
+            if (!ip) break;
+            activeWorkers++;
+            
+            let result = await testIp(ip);
+            
+            if (result.success) {
+                let best = await findBestSni(ip);
+                if (best) {
+                    successCount++;
+                    // اضافه کردن لحظه‌ای به جدول
+                    addIpToTable(ip, best.sni, best.ping);
+                } else {
+                    successCount++;
+                    addIpToTable(ip, SNI_LIST[0], result.ping);
+                }
+            } else {
+                failCount++;
+            }
+            
+            scannedCount++;
+            updateStatsAndProgress();
+            activeWorkers--;
+        }
+        if (activeWorkers === 0 && scanning && !stopRequested) {
+            finishScan();
+        }
+    }
+
+    function updateStatsAndProgress() {
+        let total = currentIps.length;
+        let percent = total ? (scannedCount / total) * 100 : 0;
+        progressFill.style.width = percent + "%";
+        progressFill.innerText = Math.round(percent) + "%";
+        statTotal.innerText = total;
+        statSuccess.innerText = successCount;
+        statFail.innerText = failCount;
+    }
+
+    function sendNotification() {
+        if (!("Notification" in window)) return;
+        if (Notification.permission === "granted") {
+            new Notification("✅ اسکن IP تمام شد!", {
+                body: `${successCount} IP سالم پیدا شد.`,
+                icon: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png"
+            });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }
+
+    function getTodayDate() {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = String(today.getMonth() + 1).padStart(2, '0');
+        let day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function startScan() {
+        let text = ipInput.value.trim();
+        if (!text) { alert("لطفاً لیست IP وارد کنید"); return; }
+        
+        currentIps = parseRangesFromText(text);
+        if (currentIps.length === 0) { alert("IP معتبری یافت نشد"); return; }
+        
+        ipInput.value = currentIps.join('\n');
+        
+        scanning = true;
+        stopRequested = false;
+        scannedCount = 0;
+        successCount = 0;
+        failCount = 0;
+        results = [];
+        ipQueue = [...currentIps];
+        
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        ipInput.disabled = true;
+        
+        refreshTableDisplay();
+        updateStatsAndProgress();
+        
+        let conc = parseInt(concurrencyInput.value) || 10;
+        for (let i = 0; i < conc; i++) worker();
+    }
+
+    function finishScan() {
+        scanning = false;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        ipInput.disabled = false;
+        updateStatsAndProgress();
+        refreshTableDisplay();
+        sendNotification();
+        alert(`✅ اسکن تمام شد!\nسالم: ${successCount} | ناموفق: ${failCount}`);
+    }
+
+    function stopScan() {
+        if (!scanning) return;
+        stopRequested = true;
+        scanning = false;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        ipInput.disabled = false;
+        updateStatsAndProgress();
+    }
+
+    function getResultsText() {
+        let sorted = [...results].sort((a,b) => a.ping - b.ping);
+        return sorted.map(r => r.ip).join('\n');
+    }
+
+    function copyResults() {
+        let txt = getResultsText();
+        if (!txt) return;
+        navigator.clipboard.writeText(txt);
+        alert(`${results.length} IP کپی شد`);
+    }
+
+    function downloadResults() {
+        let txt = getResultsText();
+        if (!txt) return;
+        let date = getTodayDate();
+        let blob = new Blob([txt], {type: 'text/plain'});
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `GT_CIPs_${date}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    presetSelect.addEventListener('change', function() {
+        let val = this.value;
+        if (!val) return;
+        
+        let newIps = [];
+        if (val === 'preset_irancell') {
+            newIps.push(...cidrToIps('185.200.232.0/24'));
+            newIps.push(...cidrToIps('185.200.233.0/24'));
+        } else if (val === 'preset_hamrah') {
+            newIps.push(...cidrToIps('194.225.0.0/16'));
+            newIps.push(...cidrToIps('217.219.0.0/16'));
+        } else if (val === 'preset_saman') {
+            newIps.push(...cidrToIps('185.143.232.0/24'));
+            newIps.push(...cidrToIps('185.143.233.0/24'));
+            newIps.push(...cidrToIps('5.134.192.0/20'));
+        } else if (val === 'preset_rightel') {
+            newIps.push(...cidrToIps('89.35.64.0/19'));
+            newIps.push(...cidrToIps('89.41.192.0/19'));
+            newIps.push(...cidrToIps('185.112.32.0/22'));
+        } else if (val === 'preset_cdn') {
+            newIps.push(...cidrToIps('1.1.1.0/24'));
+            newIps.push(...cidrToIps('8.8.8.0/24'));
+            newIps.push(...cidrToIps('4.2.2.0/24'));
+            newIps.push(...cidrToIps('208.67.222.0/24'));
+        } else if (val === 'preset_all') {
+            newIps.push(...cidrToIps('185.200.232.0/24'));
+            newIps.push(...cidrToIps('185.200.233.0/24'));
+            newIps.push(...cidrToIps('194.225.0.0/16'));
+            newIps.push(...cidrToIps('217.219.0.0/16'));
+            newIps.push(...cidrToIps('185.143.232.0/24'));
+            newIps.push(...cidrToIps('185.143.233.0/24'));
+            newIps.push(...cidrToIps('5.134.192.0/20'));
+            newIps.push(...cidrToIps('89.35.64.0/19'));
+            newIps.push(...cidrToIps('89.41.192.0/19'));
+            newIps.push(...cidrToIps('185.112.32.0/22'));
+            newIps.push(...cidrToIps('1.1.1.0/24'));
+            newIps.push(...cidrToIps('8.8.8.0/24'));
+            newIps.push(...cidrToIps('4.2.2.0/24'));
+            newIps.push(...cidrToIps('208.67.222.0/24'));
+        }
+        
+        if (newIps.length) {
+            let unique = [...new Set(newIps)];
+            ipInput.value = unique.join('\n');
+            alert(`${unique.length} IP از رنج انتخاب شده اضافه شد.`);
+        }
+        this.value = '';
+    });
+
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+    }
+
+    loadFileBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+        let file = e.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = (ev) => { 
+            ipInput.value = ev.target.result;
+            alert('فایل بارگذاری شد. حالا دکمه "آماده‌سازی لیست" را بزنید.');
+        };
+        reader.readAsText(file);
+        fileInput.value = '';
+    });
+    prepareBtn.addEventListener('click', prepareIpList);
+    clearBtn.addEventListener('click', () => { ipInput.value = ''; });
+    startBtn.addEventListener('click', startScan);
+    stopBtn.addEventListener('click', stopScan);
+    copyBtn.addEventListener('click', copyResults);
+    downloadBtn.addEventListener('click', downloadResults);
+</script>
+</body>
+</html>
