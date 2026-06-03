@@ -1,6 +1,6 @@
-# GholamTaksir-IP-Scanner
-📡 Gholam Taksir IP Scanner
-طراحی و توسعه توسط Gholam Taksir
+# QolamTaksir IP-Scanner
+📡 QolamTaksir IP Scanner
+طراحی و توسعه توسط Qolam Taksir
 .
 .
 .
@@ -28,5 +28,5 @@ SNI فقط نمایشی است: در خروجی فایل فقط آی‌پی می
 .
 .
 .
-Gholam Taksir
+Qolam Taksir
 همیشه پاینده و سربلند
